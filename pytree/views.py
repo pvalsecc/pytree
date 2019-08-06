@@ -14,6 +14,7 @@ from flask_cors import CORS, cross_origin
 from pytree.logging import log_profiles
 
 pytree_config = yaml.load(open(os.path.dirname(os.path.abspath(__file__)) + ".yaml", 'r'))
+ROUTE_PREFIX = os.environ.get('ROOT_PREFIX', '')
 
 @app.context_processor
 def yaml_config_vars():
@@ -22,12 +23,12 @@ def yaml_config_vars():
 def get_yaml_config_vars():
     return pytree_config
 
-@app.route('/')
+@app.route(ROUTE_PREFIX + '/')
 def home(name=None):
     return render_template('home.html', name=name)
 
 
-@app.route("/profile/get")
+@app.route(ROUTE_PREFIX + "/profile/get")
 @cross_origin()
 def get_profile():
     cpotree = pytree_config['vars']['cpotree_executable']
@@ -53,7 +54,7 @@ def get_profile():
     return out
 
 
-@app.route("/profile_v1/get")
+@app.route(ROUTE_PREFIX + "/profile_v1/get")
 @cross_origin()
 def get_profile_gmf1():
 
@@ -189,7 +190,7 @@ def get_profile_gmf1():
 
 
 #proxy to gmf raster dem/dsm profile service
-@app.route("/dem/get")
+@app.route(ROUTE_PREFIX + "/dem/get")
 @cross_origin()
 def get_gmf_dem_dsm():
 
@@ -219,7 +220,7 @@ def get_gmf_dem_dsm():
 
     return jsonify(demdsm)
 
-@app.route("/profile/config")
+@app.route(ROUTE_PREFIX + "/profile/config")
 @cross_origin()
 def profile_config_gmf2():
 
